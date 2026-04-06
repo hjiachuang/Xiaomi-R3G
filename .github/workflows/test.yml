@@ -38,56 +38,20 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
 
-    - name: Initialization environment
+    - name: set output
       id: init
-      env:
-        DEBIAN_FRONTEND: noninteractive
       run: |
-        sudo apt update -y
-        sudo apt full-upgrade -y
         echo "status=success" >> $GITHUB_OUTPUT
 
-    - name: Clone source code
-      working-directory: /workdir
+    - name: check output
+      if: steps.init.outputs.status == 'success' && !cancelled()
       run: |
-        df -hT $PWD
-        git clone $REPO_URL -b $REPO_BRANCH openwrt
-        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        df -hT
 
-    - name: Check space usage
-      if: (!cancelled())
-      run: df -hT
-
-    - name: Organize files
-      id: organize
-      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+    - name: begin check
+      if: steps.init.outputs.status == 'success' && !cancelled()
       run: |
-        cd openwrt/config/*/*
-        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-        echo "status=success" >> $GITHUB_OUTPUT
-
-    - name: Upload firmware directory
-      uses: actions/upload-artifact@main
-      if: steps.organize.outputs.status == 'success' && !cancelled()
-      with:
-        name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-        path: ${{ env.FIRMWARE }}
-
-    - name: Generate release tag
-      id: tag
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-      run: |
-        echo "release_tag=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_OUTPUT
-        echo "status=success" >> $GITHUB_OUTPUT
-
-    - name: Upload firmware to release
-      uses: softprops/action-gh-release@v1
-      if: steps.tag.outputs.status == 'success' && !cancelled()
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.tag.outputs.release_tag }}
-        files: ${{ env.FIRMWARE }}/*
+        echo "begin check"
 
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
