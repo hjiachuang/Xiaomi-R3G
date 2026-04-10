@@ -5,17 +5,28 @@
 ![GitHub Forks](https://img.shields.io/github/forks/P3TERX/Actions-OpenWrt.svg?style=flat-square&label=Forks&logo=github)
 
 - 作者: [P3TERX](https://github.com/P3TERX)
-- Coder: [P3TERX](https://github.com/P3TERX)
 - 使用GitHub Actions在线编译OpenWrt固件
-- Compile OpenWrt firmware online using GitHub Actions
 - 当前`.config`是小米R3G路由器的配置，除默认配置外，我做了如下改动：
   - 添加主题`luci-theme-argon`并设置默认（在`diy-part2.sh`中设置的）
-  - 移除默认主题`luci-theme-bootstrap`
+  - 将默认的lan口地址从`192.168.1.1`改成`192.168.5.1`
   - 添加了如下的插件：
     - luci-app-aria2
     - luci-app-hd-idle
     - luci-app-openclash
     - luci-app-vsftpd
+- 其他路由也可以用，都是通用的，在你的`.config`文件中设置好您设备的型号就可以了。
+
+- Coder: [P3TERX](https://github.com/P3TERX)
+- Compile OpenWrt firmware online using GitHub Actions
+- The current `.config` file is for the Xiaomi R3G router. Apart from the default configuration, I have made the following modifications:
+  - Add the theme `luci-theme-argon` and set it as the default (as set in `diy-part2.sh`)
+  - Change the default LAN port address from `192.168.1.1` to `192.168.5.1`
+  - The following plugins have been added:
+    - luci-app-aria2
+    - luci-app-hd-idle
+    - luci-app-openclash
+    - luci-app-vsftpd
+- Other routes can also be used, and they are all universal. Just set the model of your device in your `.config` file.
 
 ## 使用方法/Usage
 
